@@ -15,31 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-cmake_minimum_required(VERSION 3.12)
-message(STATUS "Building using CMake version: ${CMAKE_VERSION}")
+set(APE_BENCH_SRCS
+    benchmark_main.cc
+    filter_benchmark.cc)
 
-project(APE)
+add_executable(ape_bench ${APE_BENCH_SRCS})
 
-include_directories(${CMAKE_SOURCE_DIR})
-
-set(root_directory ${PROJECT_BINARY_DIR})
-
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
-
-option(APE_TEST      "Build tests" ON)
-option(APE_BENCH     "Build benchmarks" ON)
-
-add_subdirectory(src)
-
-if(APE_TEST)
-  enable_testing()
-  add_subdirectory(thirdparty/googletest)
-endif()
-
-if(APE_BENCH)
-  set (BENCHMARK_ENABLE_INSTALL OFF)
-  set (BENCHMARK_ENABLE_TESTING OFF)
-  add_subdirectory(thirdparty/benchmark)
-  add_subdirectory(bench)
-endif()
+target_link_libraries(ape_bench
+                      parquet_jni 
+                      benchmark)
